@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { CheckCircle } from 'lucide-react'
 
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOTOobg7QeYVIY6xlI_IpTzwupmp74SC5VRtq06YL7ALbRLtElSu3G36ynFYrdkYqt/exec'
 const BASINS = ['Permian Basin','STACK / SCOOP','Eagle Ford','Bakken','Marcellus / Utica','DJ Basin','Haynesville','Midcontinent','Anadarko','All / No preference']
 
 export default function BuyersPage() {
@@ -28,11 +29,14 @@ export default function BuyersPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await fetch('/api/buyer-lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, basins: form.basins.join(', '), type: 'BUYER' }),
+      })
+    } catch (e) {}
     setSaving(false)
     setSubmitted(true)
   }
@@ -71,7 +75,6 @@ export default function BuyersPage() {
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
         <div className="card p-6 md:p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="label">Full name *</label>
