@@ -4,8 +4,6 @@ import { supabase } from '@/lib/supabase'
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    // Store in a simple table or just log for now
-    // You can replace this with an email send (Resend, SendGrid, etc.)
     const { error } = await supabase.from('valuation_requests').insert({
       state: body.state,
       county: body.county,
@@ -17,7 +15,7 @@ export async function POST(req: Request) {
       seller_name: body.name,
       seller_email: body.email,
       seller_phone: body.phone,
-    })
+    } as any)
     if (error) throw error
     return NextResponse.json({ ok: true })
   } catch (e) {
