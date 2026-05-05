@@ -5,6 +5,8 @@ import Footer from '@/components/layout/Footer'
 import ListingCard from '@/components/listings/ListingCard'
 import type { Listing } from '@/types/database'
 
+export const revalidate = 0
+
 async function getFeaturedListings(): Promise<Listing[]> {
   const { data } = await supabase
     .from('listings')
@@ -109,7 +111,6 @@ export default async function Home() {
           <div className="relative bg-[#E8E4D8] h-64 overflow-hidden">
             <svg width="100%" height="100%" viewBox="0 0 680 256" preserveAspectRatio="xMidYMid slice">
               <rect width="680" height="256" fill="#E8E4D8"/>
-              {/* Rough US outline suggestion */}
               <path d="M60,50 L620,50 L640,90 L635,180 L580,200 L480,210 L380,215 L280,210 L180,205 L100,190 L65,150 Z"
                 fill="#DDD8CC" stroke="#C8C3B5" strokeWidth="1" fillOpacity="0.5"/>
             </svg>
