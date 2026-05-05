@@ -40,7 +40,6 @@ export default async function ListingPage({ params }: { params: { slug: string }
     <>
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        {/* Breadcrumb */}
         <nav className="text-xs text-ink/40 mb-6 flex items-center gap-2">
           <a href="/listings" className="hover:text-gold">Listings</a>
           <span>/</span>
@@ -50,11 +49,9 @@ export default async function ListingPage({ params }: { params: { slug: string }
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Header */}
             <div>
-              <div className="flex items-center gap-2 text-sm text-ink/50 mb-2">
+              <div className="flex items-center gap-1.5 text-sm text-ink/50 mb-2">
                 <MapPin size={13}/>
                 <span>{listing.county} County, {listing.state}</span>
               </div>
@@ -64,7 +61,6 @@ export default async function ListingPage({ params }: { params: { slug: string }
               </p>
             </div>
 
-            {/* Key stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { label: 'Net mineral acres', value: listing.net_mineral_acres.toString() },
@@ -79,7 +75,6 @@ export default async function ListingPage({ params }: { params: { slug: string }
               ))}
             </div>
 
-            {/* Well activity */}
             {(listing.producing_wells || listing.permitted_wells || listing.operator) && (
               <div className="card p-5">
                 <h2 className="font-medium mb-4 flex items-center gap-2">
@@ -109,7 +104,6 @@ export default async function ListingPage({ params }: { params: { slug: string }
               </div>
             )}
 
-            {/* Formation */}
             {listing.formation && (
               <div className="card p-5">
                 <h2 className="font-medium mb-3 flex items-center gap-2">
@@ -126,7 +120,6 @@ export default async function ListingPage({ params }: { params: { slug: string }
               </div>
             )}
 
-            {/* Description */}
             <div className="card p-5">
               <h2 className="font-medium mb-3 flex items-center gap-2">
                 <FileText size={15} className="text-gold"/>
@@ -135,7 +128,7 @@ export default async function ListingPage({ params }: { params: { slug: string }
               <p className="text-sm text-ink/70 leading-relaxed">{listing.description}</p>
               {listing.highlights && listing.highlights.length > 0 && (
                 <ul className="mt-4 space-y-2">
-                  {listing.highlights.map((h, i) => (
+                  {listing.highlights.map((h: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-ink/70">
                       <CheckCircle size={14} className="text-sage mt-0.5 shrink-0"/>
                       {h}
@@ -146,7 +139,6 @@ export default async function ListingPage({ params }: { params: { slug: string }
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-4">
             <div className="card p-5 sticky top-20">
               <div className="mb-4 pb-4 border-b border-ink/8">
@@ -158,10 +150,8 @@ export default async function ListingPage({ params }: { params: { slug: string }
                   </div>
                 )}
               </div>
-
               <h3 className="font-medium text-sm mb-3">Request more information</h3>
               <InquiryForm listingId={listing.id} listingTitle={listing.title} />
-
               <p className="text-xs text-ink/35 mt-3 text-center">
                 All inquiries are handled directly by our broker. No spam.
               </p>
