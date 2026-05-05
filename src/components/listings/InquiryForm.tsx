@@ -12,7 +12,7 @@ export default function InquiryForm({ listingId, listingTitle }: { listingId: st
     const { error } = await supabase.from('buyer_inquiries').insert({
       listing_id: listingId,
       ...form,
-    })
+    } as any)
     setStatus(error ? 'error' : 'success')
   }
 
