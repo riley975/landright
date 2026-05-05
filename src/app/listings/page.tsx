@@ -5,6 +5,8 @@ import ListingCard from '@/components/listings/ListingCard'
 import type { Listing } from '@/types/database'
 import type { Metadata } from 'next'
 
+export const revalidate = 0
+
 export const metadata: Metadata = {
   title: 'Browse Mineral Rights Listings',
   description: 'Browse mineral rights and royalty listings for sale across the United States. Filter by state, county, formation, and more.',
@@ -15,11 +17,9 @@ const FORMATIONS = ['Permian Basin','Wolfcamp','Bone Spring','STACK','SCOOP','Mi
 
 async function getListings(params: Record<string, string>): Promise<Listing[]> {
   let q = supabase.from('listings').select('*').neq('status', 'draft')
-
   if (params.state) q = q.eq('state', params.state)
   if (params.status === 'producing') q = q.in('lease_status', ['leased', 'held_by_production'])
   if (params.status === 'unleased') q = q.eq('lease_status', 'unleased')
-
   const { data } = await q.order('created_at', { ascending: false }).limit(50)
   return (data as Listing[]) ?? []
 }
@@ -30,7 +30,6 @@ export default async function ListingsPage({
   searchParams: Record<string, string>
 }) {
   const listings = await getListings(searchParams)
-
   return (
     <>
       <Navbar />
@@ -39,8 +38,6 @@ export default async function ListingsPage({
           <h1 className="font-serif text-3xl mb-1">Mineral rights listings</h1>
           <p className="text-ink/50 text-sm">{listings.length} listings available</p>
         </div>
-
-        {/* Filters */}
         <form className="flex flex-wrap gap-3 mb-8 items-end">
           <div>
             <label className="label">State</label>
@@ -60,7 +57,6 @@ export default async function ListingsPage({
           <button type="submit" className="btn-primary">Apply filters</button>
           <a href="/listings" className="btn-secondary">Clear</a>
         </form>
-
         {listings.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {listings.map(l => <ListingCard key={l.id} listing={l} />)}
