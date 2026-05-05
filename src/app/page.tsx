@@ -1,163 +1,114 @@
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import ListingCard from '@/components/listings/ListingCard'
-import type { Listing } from '@/types/database'
+import { CheckCircle, Clock, DollarSign, Phone } from 'lucide-react'
 
 export const revalidate = 0
 
-async function getFeaturedListings(): Promise<Listing[]> {
-  const { data } = await supabase
-    .from('listings')
-    .select('*')
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
-    .limit(6)
-  return (data as Listing[]) ?? []
-}
+const STATES = ['Oklahoma','Texas','North Dakota','New Mexico','Colorado','Wyoming','Montana','Kansas','Louisiana','West Virginia','Pennsylvania','Ohio','Utah','Mississippi','Alabama','Arkansas','Michigan']
 
-const BASINS = [
-  { name: 'Permian Basin', states: 'TX · NM', top: '48%', left: '28%' },
-  { name: 'STACK / SCOOP', states: 'OK', top: '46%', left: '40%' },
-  { name: 'Eagle Ford', states: 'TX', top: '60%', left: '36%' },
-  { name: 'Bakken', states: 'ND · MT', top: '22%', left: '36%' },
-  { name: 'DJ Basin', states: 'CO · WY', top: '37%', left: '28%' },
-  { name: 'Haynesville', states: 'LA · TX', top: '53%', left: '48%' },
-  { name: 'Marcellus', states: 'PA · WV', top: '34%', left: '68%' },
-  { name: 'Uinta / Piceance', states: 'UT · CO', top: '40%', left: '24%' },
-]
-
-export default async function Home() {
-  const listings = await getFeaturedListings()
-
+export default function Home() {
   return (
     <>
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-ink text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-          <div className="max-w-2xl">
-            <p className="text-gold text-xs font-medium uppercase tracking-widest mb-4">
-              The mineral rights marketplace
-            </p>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight mb-5">
-              Buy &amp; sell{' '}
-              <em className="text-gold-light">mineral rights</em>{' '}
-              across America
-            </h1>
-            <p className="text-white/55 text-lg leading-relaxed mb-8 max-w-xl">
-              Transparent listings, real well data, and a trusted broker connecting mineral owners with qualified buyers nationwide.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link href="/listings" className="btn-primary text-base px-6 py-3">
-                Browse listings
-              </Link>
-              <Link href="/sell" className="bg-white/10 hover:bg-white/15 text-white font-medium px-6 py-3 rounded-lg text-base transition-colors">
-                Get a free valuation →
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-wrap gap-8 md:gap-16">
-            {[
-              { n: '38', label: 'States covered' },
-              { n: '$94M+', label: 'Transacted' },
-              { n: '1,200+', label: 'Active listings' },
-              { n: '6,400+', label: 'Registered buyers' },
-            ].map(s => (
-              <div key={s.label}>
-                <div className="font-serif text-2xl text-gold-light">{s.n}</div>
-                <div className="text-xs text-white/40 mt-0.5">{s.label}</div>
-              </div>
-            ))}
-          </div>
+      <section className="bg-stone-900 text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 md:py-28 text-center">
+          <p className="text-green-400 text-xs font-medium uppercase tracking-widest mb-4">Mineral rights buyers — all 50 states</p>
+          <h1 className="font-serif text-4xl md:text-6xl leading-tight mb-6">
+            We buy mineral rights.<br/>
+            <em className="text-green-300">Get your free offer today.</em>
+          </h1>
+          <p className="text-white/60 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+            We have active buyers ready right now. No cost, no obligation — just a fast, fair offer on your oil and gas minerals.
+          </p>
+          <Link href="/offer" className="btn-primary text-base px-10 py-4 inline-block">
+            Get my free offer →
+          </Link>
+          <p className="text-white/30 text-xs mt-4">Takes 2 minutes · No obligation · We call you</p>
         </div>
       </section>
 
-      {/* Featured listings */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
-        <div className="flex items-baseline justify-between mb-6">
-          <h2 className="font-serif text-2xl">Featured listings</h2>
-          <Link href="/listings" className="btn-ghost">View all →</Link>
-        </div>
-
-        {listings.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {listings.map(l => <ListingCard key={l.id} listing={l} />)}
-          </div>
-        ) : (
-          <div className="text-center py-16 text-ink/40">
-            <p className="text-lg">Listings coming soon</p>
-            <p className="text-sm mt-1">Check back shortly or register as a buyer to get alerts.</p>
-            <Link href="/buyers" className="btn-primary mt-4 inline-block">Register as a buyer</Link>
-          </div>
-        )}
-      </section>
-
-      {/* Basin map */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-14">
-        <div className="card overflow-hidden">
-          <div className="px-5 py-4 border-b border-ink/8 flex items-center justify-between">
-            <div>
-              <h2 className="font-medium text-sm">Active listings by basin</h2>
-              <p className="text-xs text-ink/50 mt-0.5">Click any basin to explore listings</p>
+      {/* Trust bar */}
+      <section className="bg-green-700 text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap justify-center gap-8 text-sm">
+          {['No cost to you', 'Fast closings', 'Active buyers in all 50 states', 'Free valuation'].map(t => (
+            <div key={t} className="flex items-center gap-2">
+              <CheckCircle size={14} className="text-green-300"/>
+              {t}
             </div>
-          </div>
-          <div className="relative bg-[#E8E4D8] h-64 overflow-hidden">
-            <svg width="100%" height="100%" viewBox="0 0 680 256" preserveAspectRatio="xMidYMid slice">
-              <rect width="680" height="256" fill="#E8E4D8"/>
-              <path d="M60,50 L620,50 L640,90 L635,180 L580,200 L480,210 L380,215 L280,210 L180,205 L100,190 L65,150 Z"
-                fill="#DDD8CC" stroke="#C8C3B5" strokeWidth="1" fillOpacity="0.5"/>
-            </svg>
-            {BASINS.map(b => (
-              <Link
-                key={b.name}
-                href={`/listings?basin=${encodeURIComponent(b.name)}`}
-                className="absolute group"
-                style={{ top: b.top, left: b.left, transform: 'translate(-50%, -50%)' }}
-              >
-                <div className="relative">
-                  <div className="w-3 h-3 bg-gold rounded-full border-2 border-white shadow group-hover:scale-125 transition-transform"/>
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-ink text-white text-xs rounded-md px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    <span className="font-medium">{b.name}</span>
-                    <span className="text-white/60 ml-1">{b.states}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+          ))}
         </div>
       </section>
 
       {/* How it works */}
-      <section className="bg-ink text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14">
-          <h2 className="font-serif text-2xl mb-10 text-center">How Landright works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+        <h2 className="font-serif text-3xl text-center mb-12">How it works</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { icon: Phone, n: '01', title: 'Tell us what you own', body: 'Fill out our simple form. Takes 2 minutes. Just your location and a rough idea of what you have.' },
+            { icon: DollarSign, n: '02', title: 'We get you an offer', body: 'We review your minerals, check production data and nearby activity, and bring you a real offer from our buyer network.' },
+            { icon: Clock, n: '03', title: 'You choose', body: 'No pressure, no obligation. If you like the offer, we handle everything. You just collect the check.' },
+          ].map(({ icon: Icon, n, title, body }) => (
+            <div key={n} className="text-center">
+              <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon size={22} className="text-green-700"/>
+              </div>
+              <h3 className="font-medium text-lg mb-2">{title}</h3>
+              <p className="text-stone-500 text-sm leading-relaxed">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Why us */}
+      <section className="bg-stone-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+          <h2 className="font-serif text-3xl text-center mb-10">Why mineral owners choose us</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              { n: '01', title: 'Submit your minerals', body: 'Tell us what you own. We review the production data, nearby activity, and comparable sales to price it right.' },
-              { n: '02', title: 'We list & market it', body: 'Your listing goes live to thousands of registered buyers. We handle all inquiries so you don\'t have to.' },
-              { n: '03', title: 'Close the deal', body: 'We broker the transaction between you and the buyer. You receive maximum value, we handle the paperwork.' },
-            ].map(s => (
-              <div key={s.n} className="flex gap-4">
-                <div className="font-serif text-3xl text-gold-light/30 leading-none w-10 shrink-0">{s.n}</div>
+              { title: 'We have ready buyers', body: 'We work with an active network of qualified mineral buyers across the country. When you submit your info, we already have people looking.' },
+              { title: 'No cost to you — ever', body: 'Our fee comes from the buyer, not you. Getting an offer costs you nothing, and there\'s zero obligation to accept.' },
+              { title: 'We do all the work', body: 'Title review, paperwork, closing coordination — we handle it all. You don\'t need a lawyer or a landman. We\'ve got it covered.' },
+              { title: 'Fast, fair offers', body: 'Most sellers get an offer within a few business days. We use real production data and comparable sales — no lowball offers.' },
+              { title: 'You stay in control', body: 'We work for you. If an offer doesn\'t meet your number, we keep working. No pressure, no deadlines, no games.' },
+              { title: 'We know minerals', body: 'From the Permian to the STACK to the Bakken — we know these plays and can tell you exactly what your acreage is worth in today\'s market.' },
+            ].map(({ title, body }) => (
+              <div key={title} className="card p-5 flex gap-4">
+                <CheckCircle size={18} className="text-green-600 mt-0.5 shrink-0"/>
                 <div>
-                  <h3 className="font-medium mb-2">{s.title}</h3>
-                  <p className="text-sm text-white/55 leading-relaxed">{s.body}</p>
+                  <h3 className="font-medium mb-1">{title}</h3>
+                  <p className="text-sm text-stone-500 leading-relaxed">{body}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="text-center mt-10">
-            <Link href="/sell" className="btn-primary text-base px-8 py-3">
-              Get a free valuation
-            </Link>
-          </div>
+        </div>
+      </section>
+
+      {/* States */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16 text-center">
+        <h2 className="font-serif text-3xl mb-4">We buy minerals in all 50 states</h2>
+        <p className="text-stone-500 mb-8">Active buyers in every major producing basin</p>
+        <div className="flex flex-wrap justify-center gap-2">
+          {STATES.map(s => (
+            <span key={s} className="text-xs bg-stone-100 text-stone-600 border border-stone-200 px-3 py-1.5 rounded-full">
+              {s}
+            </span>
+          ))}
+          <span className="text-xs bg-stone-100 text-stone-600 border border-stone-200 px-3 py-1.5 rounded-full">+ all others</span>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="bg-stone-900 text-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
+          <h2 className="font-serif text-3xl mb-4">Ready to find out what your minerals are worth?</h2>
+          <p className="text-white/55 mb-8">Free. No obligation. We call you within one business day.</p>
+          <Link href="/offer" className="btn-primary text-base px-10 py-4 inline-block">
+            Get my free offer →
+          </Link>
         </div>
       </section>
 
