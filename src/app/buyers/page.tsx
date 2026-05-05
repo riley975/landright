@@ -2,39 +2,52 @@
 import { useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import { CheckCircle, Bell, Map, Zap } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 
-const BASINS = ['Permian Basin','STACK / SCOOP','Eagle Ford','Bakken','Marcellus / Utica','DJ Basin / Niobrara','Haynesville','Midcontinent','Other']
+const BASINS = ['Permian Basin','STACK / SCOOP','Eagle Ford','Bakken','Marcellus / Utica','DJ Basin','Haynesville','Midcontinent','Anadarko','All / No preference']
 
 export default function BuyersPage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', basins: [] as string[], min_acres: '', max_budget: '', notes: '' })
-  const [done, setDone] = useState(false)
+  const [form, setForm] = useState({
+    name: '', email: '', phone: '', company: '',
+    basins: [] as string[],
+    min_acres: '', max_budget: '',
+    lease_status: '', notes: ''
+  })
+  const [submitted, setSubmitted] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const update = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }))
 
   const toggleBasin = (b: string) => {
-    setForm(p => ({ ...p, basins: p.basins.includes(b) ? p.basins.filter(x => x !== b) : [...p.basins, b] }))
+    setForm(p => ({
+      ...p,
+      basins: p.basins.includes(b) ? p.basins.filter(x => x !== b) : [...p.basins, b]
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await fetch('/api/buyer-register', {
+    setSaving(true)
+    await fetch('/api/buyer-lead', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
     })
-    setDone(true)
+    setSaving(false)
+    setSubmitted(true)
   }
 
-  if (done) {
+  if (submitted) {
     return (
       <>
         <Navbar />
         <main className="max-w-xl mx-auto px-4 sm:px-6 py-20 text-center">
-          <div className="w-14 h-14 bg-sage-light rounded-full flex items-center justify-center mx-auto mb-5">
-            <CheckCircle size={24} className="text-sage"/>
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle size={28} className="text-green-600"/>
           </div>
           <h1 className="font-serif text-3xl mb-3">You're registered</h1>
-          <p className="text-ink/60 max-w-sm mx-auto leading-relaxed">
-            We'll send you new listings matching your criteria as they come available.
+          <p className="text-stone-500 leading-relaxed max-w-sm mx-auto">
+            Thanks {form.name.split(' ')[0]}! We'll reach out when we have deals matching your criteria.
           </p>
         </main>
         <Footer />
@@ -46,52 +59,38 @@ export default function BuyersPage() {
     <>
       <Navbar />
 
-      {/* Hero */}
-      <section className="bg-ink text-white py-14">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h1 className="font-serif text-4xl mb-4">Find mineral rights <em className="text-gold-light">before anyone else</em></h1>
-          <p className="text-white/55 text-lg max-w-xl mx-auto mb-8">
-            Register as a buyer to get new listings delivered to your inbox the moment they go live.
+      <section className="bg-stone-900 text-white py-14 text-center">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <h1 className="font-serif text-4xl mb-4">Register as a mineral rights buyer</h1>
+          <p className="text-white/55 text-lg leading-relaxed">
+            Tell us what you're looking for and we'll bring deals directly to you — before they hit the open market.
           </p>
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-white/50">
-            {[
-              [Bell, 'Instant listing alerts'],
-              [Map, 'Filter by basin & state'],
-              [Zap, 'Early access to off-market deals'],
-            ].map(([Icon, text]) => (
-              <div key={text as string} className="flex items-center gap-2">
-                <Icon size={14} className="text-gold"/>
-                {text as string}
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
         <div className="card p-6 md:p-8">
-          <h2 className="font-serif text-2xl mb-1">Register as a buyer</h2>
-          <p className="text-sm text-ink/50 mb-6">Free. No obligation. Unsubscribe anytime.</p>
-
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="label">Full name *</label>
-                <input className="input" required value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))}/>
+                <input className="input" required value={form.name} onChange={e => update('name', e.target.value)}/>
               </div>
               <div>
                 <label className="label">Email *</label>
-                <input className="input" type="email" required value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))}/>
+                <input className="input" type="email" required value={form.email} onChange={e => update('email', e.target.value)}/>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="label">Phone</label>
-                <input className="input" type="tel" value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}/>
+                <input className="input" type="tel" value={form.phone} onChange={e => update('phone', e.target.value)}/>
               </div>
               <div>
                 <label className="label">Company / fund</label>
-                <input className="input" value={form.company} onChange={e => setForm(p => ({ ...p, company: e.target.value }))}/>
+                <input className="input" value={form.company} onChange={e => update('company', e.target.value)}/>
               </div>
             </div>
 
@@ -99,12 +98,11 @@ export default function BuyersPage() {
               <label className="label">Basins of interest</label>
               <div className="flex flex-wrap gap-2 mt-1.5">
                 {BASINS.map(b => (
-                  <button type="button" key={b}
-                    onClick={() => toggleBasin(b)}
+                  <button type="button" key={b} onClick={() => toggleBasin(b)}
                     className={`text-sm px-3 py-1.5 rounded-lg border transition-colors ${
                       form.basins.includes(b)
-                        ? 'bg-ink text-white border-ink'
-                        : 'bg-white text-ink/60 border-ink/20 hover:border-ink/40'
+                        ? 'bg-stone-900 text-white border-stone-900'
+                        : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
                     }`}>
                     {b}
                   </button>
@@ -112,29 +110,39 @@ export default function BuyersPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="label">Min. acreage</label>
-                <input className="input" type="number" placeholder="e.g. 20" value={form.min_acres}
-                  onChange={e => setForm(p => ({ ...p, min_acres: e.target.value }))}/>
+                <label className="label">Minimum acreage</label>
+                <input className="input" value={form.min_acres} onChange={e => update('min_acres', e.target.value)} placeholder="e.g. 20 NMA"/>
               </div>
               <div>
                 <label className="label">Max budget</label>
-                <input className="input" placeholder="e.g. $500,000" value={form.max_budget}
-                  onChange={e => setForm(p => ({ ...p, max_budget: e.target.value }))}/>
+                <input className="input" value={form.max_budget} onChange={e => update('max_budget', e.target.value)} placeholder="e.g. $500,000"/>
               </div>
             </div>
 
             <div>
-              <label className="label">Anything else?</label>
-              <textarea className="input resize-none" rows={2} value={form.notes}
-                placeholder="Specific counties, formations, or deal criteria..."
-                onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}/>
+              <label className="label">Lease preference</label>
+              <select className="input" value={form.lease_status} onChange={e => update('lease_status', e.target.value)}>
+                <option value="">No preference</option>
+                <option value="producing">Producing / leased</option>
+                <option value="unleased">Unleased</option>
+                <option value="both">Both</option>
+              </select>
             </div>
 
-            <button type="submit" className="btn-primary w-full justify-center">
-              Register as a buyer
+            <div>
+              <label className="label">Anything else?</label>
+              <textarea className="input resize-none" rows={3} value={form.notes}
+                placeholder="Specific counties, formations, deal size, structure preferences..."
+                onChange={e => update('notes', e.target.value)}/>
+            </div>
+
+            <button type="submit" disabled={saving} className="btn-primary w-full text-center text-base py-4 disabled:opacity-50">
+              {saving ? 'Submitting...' : 'Register as a buyer →'}
             </button>
+
+            <p className="text-xs text-stone-400 text-center">Free to register · We never share your info · Unsubscribe anytime</p>
           </form>
         </div>
       </main>
