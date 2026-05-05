@@ -4,6 +4,8 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { CheckCircle } from 'lucide-react'
 
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOTOobg7QeYVIY6xlI_IpTzwupmp74SC5VRtq06YL7ALbRLtElSu3G36ynFYrdkYqt/exec'
+
 export default function OfferPage() {
   const [form, setForm] = useState({
     name: '', email: '', phone: '',
@@ -18,11 +20,14 @@ export default function OfferPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await fetch('/api/lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, type: 'SELLER' }),
+      })
+    } catch (e) {}
     setSaving(false)
     setSubmitted(true)
   }
@@ -37,7 +42,7 @@ export default function OfferPage() {
           </div>
           <h1 className="font-serif text-3xl mb-3">We'll be in touch soon</h1>
           <p className="text-stone-500 leading-relaxed max-w-sm mx-auto">
-            Thanks {form.name.split(' ')[0]}! We'll review your minerals and reach out within one business day with a valuation and offer.
+            Thanks {form.name.split(' ')[0]}! We'll review your minerals and reach out within one business day.
           </p>
         </main>
         <Footer />
