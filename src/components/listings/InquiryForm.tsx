@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import type { BuyerInquiry } from '@/types/database'
 
 export default function InquiryForm({ listingId, listingTitle }: { listingId: string; listingTitle: string }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' })
@@ -10,11 +9,10 @@ export default function InquiryForm({ listingId, listingTitle }: { listingId: st
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('loading')
-    const payload: Omit<BuyerInquiry, 'id' | 'created_at'> = {
+    const { error } = await supabase.from('buyer_inquiries').insert({
       listing_id: listingId,
       ...form,
-    }
-    const { error } = await supabase.from('buyer_inquiries').insert(payload)
+    } as any)
     setStatus(error ? 'error' : 'success')
   }
 
