@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       min_acres: body.min_acres,
       max_budget: body.max_budget,
       notes: body.notes,
-    })
+    } as any)
     if (error) throw error
     return NextResponse.json({ ok: true })
   } catch (e) {
