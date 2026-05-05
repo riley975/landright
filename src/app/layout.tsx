@@ -2,17 +2,9 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Landright — Mineral Rights Marketplace',
-    template: '%s | Landright',
-  },
-  description: 'Buy and sell mineral rights across the United States. Browse active listings, get valuations, and connect with a trusted broker.',
-  keywords: ['mineral rights', 'sell mineral rights', 'buy mineral rights', 'royalty rights', 'oil and gas minerals'],
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'Landright',
-  },
+  title: { default: 'We Buy Minerals — Get a Free Offer on Your Mineral Rights', template: '%s | WeBuyMinerals' },
+  description: 'We buy mineral rights nationwide. Get a free, no-obligation offer on your oil and gas minerals. Fast closings, top dollar, no hassle.',
+  keywords: ['sell mineral rights', 'we buy mineral rights', 'sell oil and gas minerals', 'mineral rights buyer', 'mineral rights offer'],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
