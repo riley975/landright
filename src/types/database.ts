@@ -6,8 +6,6 @@ export interface Listing {
   id: string
   created_at: string
   updated_at: string
-
-  // Location
   state: string
   county: string
   legal_description: string
@@ -16,8 +14,6 @@ export interface Listing {
   section?: string
   latitude?: number
   longitude?: number
-
-  // Details
   title: string
   listing_type: ListingType
   net_mineral_acres: number
@@ -28,13 +24,9 @@ export interface Listing {
   operator?: string
   producing_wells?: number
   permitted_wells?: number
-
-  // Content
   description: string
   highlights?: string[]
   status: ListingStatus
-
-  // Contact (broker-only — never shown publicly)
   seller_name?: string
   seller_email?: string
   seller_phone?: string
@@ -52,7 +44,34 @@ export interface BuyerInquiry {
   company?: string
 }
 
-// Supabase generated types (simplified)
+export interface BuyerRegistration {
+  id: string
+  created_at: string
+  name: string
+  email: string
+  phone?: string
+  company?: string
+  basins?: string[]
+  min_acres?: string
+  max_budget?: string
+  notes?: string
+}
+
+export interface ValuationRequest {
+  id: string
+  created_at: string
+  state?: string
+  county?: string
+  legal_description?: string
+  acres?: string
+  lease_status?: string
+  formation?: string
+  notes?: string
+  seller_name?: string
+  seller_email?: string
+  seller_phone?: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -65,6 +84,16 @@ export interface Database {
         Row: BuyerInquiry
         Insert: Omit<BuyerInquiry, 'id' | 'created_at'>
         Update: Partial<BuyerInquiry>
+      }
+      buyer_registrations: {
+        Row: BuyerRegistration
+        Insert: Omit<BuyerRegistration, 'id' | 'created_at'>
+        Update: Partial<BuyerRegistration>
+      }
+      valuation_requests: {
+        Row: ValuationRequest
+        Insert: Omit<ValuationRequest, 'id' | 'created_at'>
+        Update: Partial<ValuationRequest>
       }
     }
   }
